@@ -1,0 +1,16 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 0;
+}
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    color:#b69c7a;
+    align-content: flex-start;
+}
+
+.pixel {
+    border-color: black;
+}
