@@ -26,6 +26,11 @@ buttonDiv.classList.add('buttons');
 buttonDiv.style.background = '#f4f4f4';
 buttonDiv.style.textAlign = 'center';
 document.body.appendChild(buttonDiv);
+//  Color Button
+color = document.createElement('button');
+color.classList.add('button');
+color.textContent = 'Color Mode';
+buttonDiv.appendChild(color);
 //  Reset Button
 reset = document.createElement('button');
 reset.classList.add('button')
@@ -37,6 +42,9 @@ erase.classList.add('button');
 erase.textContent = 'Erase';
 buttonDiv.appendChild(erase);
 
+// Pixel Slider Div
+
+
 // console.log(container);
 // console.log(container.clientWidth);
 // console.log(pixelWidth);
@@ -44,9 +52,13 @@ buttonDiv.appendChild(erase);
 // MAIN
 createContainer();
 const pixels = document.querySelectorAll('.pixel');
-console.log(pixels);
+//console.log(pixels);
+
 pixels.forEach((pixel) => pixel.addEventListener('mouseover', paintPixel));
-reset.addEventListener('click', erasePaint);
+//pixels.forEach((pixel) => pixel.addEventListener('mousedown', paintPixel));
+
+reset.addEventListener('click', resetBoard);
+erase.addEventListener('click', paintPixel);
 
 
 // FUNCTIONS
@@ -65,15 +77,22 @@ function createContainer() {
     }
 }
 
-function paintPixel() {
-    this.style.background = 'black';
+function paintPixel(e) {
+    // if colorMode is selected or last button clicked
+    // check if the mousedown is active 
+    if (e.buttons == 1) this.style.background = 'black';
+    // if Erase was last button clicked
+    //this.style.background = 'pink'; // white
 }
 
-function erasePaint() {
+
+
+function resetBoard() {
     for (var i = 0; i < 16*16; i++){
         allPixels = document.querySelectorAll('.pixel');
         allPixels[i].style.background = 'white';
     }
 }
+
 // upon mouseover, turn div.pixel.backgorund = 'black'
 // do not undo styling until button is clicked 
