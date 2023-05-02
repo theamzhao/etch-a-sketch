@@ -43,7 +43,15 @@ erase.textContent = 'Erase';
 buttonDiv.appendChild(erase);
 
 // Pixel Slider Div
-
+pixelCount = document.createElement('select');
+pixelCount.classList.add('options');
+var smallOption = document.createElement("option");
+smallOption.text = "16 x 16";
+pixelCount.add(smallOption);
+var bigOption = document.createElement("option");
+bigOption.text = "64 x 64";
+pixelCount.add(bigOption);
+buttonDiv.appendChild(pixelCount);
 
 // console.log(container);
 // console.log(container.clientWidth);
@@ -52,11 +60,10 @@ buttonDiv.appendChild(erase);
 // MAIN
 createContainer();
 const pixels = document.querySelectorAll('.pixel');
-//console.log(pixels);
 
 pixels.forEach((pixel) => pixel.addEventListener('mouseover', paintPixel));
-//pixels.forEach((pixel) => pixel.addEventListener('mousedown', paintPixel));
 
+pixelCount.addEventListener('click',pixelChange);
 reset.addEventListener('click', resetBoard);
 erase.addEventListener('click', paintPixel);
 
@@ -85,8 +92,6 @@ function paintPixel(e) {
     //this.style.background = 'pink'; // white
 }
 
-
-
 function resetBoard() {
     for (var i = 0; i < 16*16; i++){
         allPixels = document.querySelectorAll('.pixel');
@@ -94,5 +99,7 @@ function resetBoard() {
     }
 }
 
-// upon mouseover, turn div.pixel.backgorund = 'black'
-// do not undo styling until button is clicked 
+function pixelChange() {
+    // if option is selected, then make re-run "createContainer"
+    // passing in the number of pixels per side of board 
+}
