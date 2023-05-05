@@ -18,7 +18,7 @@ container.style.height = '550px';
 container.style.width = '550px';
 document.body.appendChild(container);
 const width = container.clientWidth;
-const pixelWidth = (width/16.5).toString() + "px"; // 16.5 <- account for border width
+var pixelWidth = (width/16.5).toString() + "px"; // 16.5 <- account for border width
 
 // Buttons Div
 buttonDiv = document.createElement('div');
@@ -53,35 +53,39 @@ bigOption.text = "64 x 64";
 pixelCount.add(bigOption);
 buttonDiv.appendChild(pixelCount);
 
+sizeBtn = document.createElement('button');
+sizeBtn.classList.add('button');
+sizeBtn.textContent = 'Change pixel size';
+buttonDiv.appendChild(sizeBtn);
+
 // console.log(container);
 // console.log(container.clientWidth);
 // console.log(pixelWidth);
 
 // MAIN
-createContainer();
-const pixels = document.querySelectorAll('.pixel');
+createContainer(16);
 
-pixels.forEach((pixel) => pixel.addEventListener('mouseover', paintPixel));
-
-pixelCount.addEventListener('click',pixelChange);
 reset.addEventListener('click', resetBoard);
 erase.addEventListener('click', paintPixel);
+sizeBtn.addEventListener('click',pixelChange);
 
 
 // FUNCTIONS
-function createContainer() {
-    for (var i = 0; i < 16*16; i++){
+function createContainer(pix) {
+    for (var i = 0; i < pix*pix; i++){
         var pixelName = "pixel"+i;
         pixel = document.createElement('div');
         pixel.classList.add('pixel');
         pixel.id = pixelName;
-        pixel.style.background = 'pink';
+        pixel.style.background = '#f4f4f4';
         pixel.style.borderStyle = 'solid';
-        pixel.style.borderWidth = '0.25px';
+        pixel.style.borderWidth = '0.1px';
         pixel.style.width = pixelWidth;
         pixel.style.height = pixelWidth;
         container.appendChild(pixel);
     }
+    const pixels = document.querySelectorAll('.pixel');
+    pixels.forEach((pixel) => pixel.addEventListener('mouseover', paintPixel));
 }
 
 function paintPixel(e) {
@@ -99,7 +103,21 @@ function resetBoard() {
     }
 }
 
-function pixelChange() {
+function pixelChange(e) {
     // if option is selected, then make re-run "createContainer"
     // passing in the number of pixels per side of board 
+    console.log(pixelCount.selectedIndex);
+    var size = pixelCount.selectedIndex;
+    while (container.firstChild) {
+        container.removeChild(container.lastChild);
+    }
+    if (size == 0){
+        console.log(pixelWidth);
+        pixelWidth = (width/16.5).toString() + "px";
+        createContainer(16);
+    } else if (size == 1){
+        pixelWidth = (width/73).toString() + "px";
+        console.log(pixelWidth);
+        createContainer(64);
+    }
 }
