@@ -58,15 +58,11 @@ sizeBtn.classList.add('button');
 sizeBtn.textContent = 'Change pixel size';
 buttonDiv.appendChild(sizeBtn);
 
-// console.log(container);
-// console.log(container.clientWidth);
-// console.log(pixelWidth);
-
 // MAIN
 createContainer(16);
-
-reset.addEventListener('click', resetBoard);
-erase.addEventListener('click', paintPixel);
+color.addEventListener('click', colorClass);
+erase.addEventListener('click', eraseClass);
+reset.addEventListener('click', pixelChange);
 sizeBtn.addEventListener('click',pixelChange);
 
 
@@ -76,9 +72,12 @@ function createContainer(pix) {
         var pixelName = "pixel"+i;
         pixel = document.createElement('div');
         pixel.classList.add('pixel');
+        pixel.classList.add(pix);
+        pixel.classList.add("color")
         pixel.id = pixelName;
         pixel.style.background = '#f4f4f4';
         pixel.style.borderStyle = 'solid';
+        pixel.style.borderColor = '#dadada'
         pixel.style.borderWidth = '0.1px';
         pixel.style.width = pixelWidth;
         pixel.style.height = pixelWidth;
@@ -89,23 +88,33 @@ function createContainer(pix) {
 }
 
 function paintPixel(e) {
-    // if colorMode is selected or last button clicked
-    // check if the mousedown is active 
-    if (e.buttons == 1) this.style.background = 'black';
-    // if Erase was last button clicked
-    //this.style.background = 'pink'; // white
-}
-
-function resetBoard() {
-    for (var i = 0; i < 16*16; i++){
-        allPixels = document.querySelectorAll('.pixel');
-        allPixels[i].style.background = 'white';
+    const pixels = document.querySelectorAll('.color');
+    if (pixels.length > 0){
+        if (e.buttons == 1) this.style.background = 'black';
+    } else if (pixels.length == 0){
+        if (e.buttons == 1) this.style.background = '#f4f4f4'; 
     }
 }
 
-function pixelChange(e) {
-    // if option is selected, then make re-run "createContainer"
+function eraseClass() {
+    const pixels = document.querySelectorAll('.color');
+    pixels.forEach(function(pixel) {
+        pixel.classList.remove("color");
+        pixel.classList.add("erase");
+    });
+}
+
+function colorClass() {
+    const pixels = document.querySelectorAll('.erase');
+    pixels.forEach(function(pixel) {
+        pixel.classList.remove("erase");
+        pixel.classList.add("color");
+    });
+}
+
+function pixelChange() {
     // passing in the number of pixels per side of board 
+    // fix pixelWidth to be automated
     console.log(pixelCount.selectedIndex);
     var size = pixelCount.selectedIndex;
     while (container.firstChild) {
