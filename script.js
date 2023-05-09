@@ -14,7 +14,7 @@ container.style.background = '#514b45';
 container.style.textAlign = 'center';
 container.style.maxWidth = '75%';
 container.style.maxHeight = '75%';
-container.style.width = '40%';
+container.style.width = '500px';
 container.style.height = 'relative';
 document.body.appendChild(container);
 const width = container.clientWidth;
@@ -51,6 +51,9 @@ pixelCount.classList.add('options');
 var smallOption = document.createElement("option");
 smallOption.text = "16px";
 pixelCount.add(smallOption);
+var medOption = document.createElement("option");
+medOption.text = "32px";
+pixelCount.add(medOption);
 var bigOption = document.createElement("option");
 bigOption.text = "64px";
 pixelCount.add(bigOption);
@@ -67,9 +70,7 @@ color.addEventListener('click', colorClass);
 erase.addEventListener('click', eraseClass);
 reset.addEventListener('click', resetBoard);
 sizeBtn.addEventListener('click',pixelChange);
-window.addEventListener('resize', windowResize);
-
-// IF CONTAINER SHRINKS 
+window.addEventListener('resize', windowResize); 
 
 
 // FUNCTIONS
@@ -120,21 +121,16 @@ function colorClass() {
 }
 
 function pixelChange() {
-    // passing in the number of pixels per side of board 
-    var boardSize = document.querySelectorAll('.px16');
-    var size = pixelCount.selectedIndex;
-    if (size == 0 && boardSize.length < 1){
-        console.log(pixelWidth);
-        pixelWidth = ((width/16)-1.05).toString() + "px"; 
-        //pixelWidth respects up to 2 decimals 
+    var selectSize = pixelCount.options[pixelCount.selectedIndex].text;
+    selectSize = selectSize.split('px').join("");
+    compare = ".px"+selectSize;
+    var currSize = document.querySelectorAll(compare);
+
+    if (currSize.length < 1){
+        pixelWidth = ((width/selectSize)-(1)).toString() + "px"; 
         removeAll();
-        createContainer(16);
-    } else if (size == 1 && boardSize.length > 0){
-        pixelWidth = ((width/64)-1.01).toString() + "px"; 
-        console.log(pixelWidth);
-        removeAll();
-        createContainer(64);
-    }
+        createContainer(selectSize);
+    } 
 }
 
 function resetBoard() {
@@ -149,7 +145,7 @@ function removeAll() {
         container.removeChild(container.lastChild);
     }
 }
+
 function windowResize(e) { 
-    // if 
     console.log(this);
 }
