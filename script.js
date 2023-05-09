@@ -14,11 +14,14 @@ container.style.background = '#514b45';
 container.style.textAlign = 'center';
 container.style.maxWidth = '75%';
 container.style.maxHeight = '75%';
-container.style.height = '550px';
-container.style.width = '550px';
+container.style.width = '40%';
+container.style.height = 'relative';
 document.body.appendChild(container);
 const width = container.clientWidth;
-var pixelWidth = (width/16.5).toString() + "px"; // 16.5 <- account for border width
+container.style.height = width+"px";
+var pixelWidth = ((width/16)-1.05).toString() + "px"; // border width accounts for 1 pixel
+console.log(width);
+console.log(pixelWidth);
 
 // Buttons Div
 buttonDiv = document.createElement('div');
@@ -46,10 +49,10 @@ buttonDiv.appendChild(erase);
 pixelCount = document.createElement('select');
 pixelCount.classList.add('options');
 var smallOption = document.createElement("option");
-smallOption.text = "16 x 16";
+smallOption.text = "16px";
 pixelCount.add(smallOption);
 var bigOption = document.createElement("option");
-bigOption.text = "64 x 64";
+bigOption.text = "64px";
 pixelCount.add(bigOption);
 buttonDiv.appendChild(pixelCount);
 
@@ -62,17 +65,21 @@ buttonDiv.appendChild(sizeBtn);
 createContainer(16);
 color.addEventListener('click', colorClass);
 erase.addEventListener('click', eraseClass);
-reset.addEventListener('click', pixelChange);
+reset.addEventListener('click', resetBoard);
 sizeBtn.addEventListener('click',pixelChange);
+window.addEventListener('resize', windowResize);
+
+// IF CONTAINER SHRINKS 
 
 
 // FUNCTIONS
-function createContainer(pix) {
+function createContainer(pix = 16) {
+
     for (var i = 0; i < pix*pix; i++){
         var pixelName = "pixel"+i;
         pixel = document.createElement('div');
         pixel.classList.add('pixel');
-        pixel.classList.add(pix);
+        pixel.classList.add("px"+pix);
         pixel.classList.add("color")
         pixel.id = pixelName;
         pixel.style.background = '#f4f4f4';
@@ -114,19 +121,35 @@ function colorClass() {
 
 function pixelChange() {
     // passing in the number of pixels per side of board 
-    // fix pixelWidth to be automated
-    console.log(pixelCount.selectedIndex);
+    var boardSize = document.querySelectorAll('.px16');
     var size = pixelCount.selectedIndex;
+    if (size == 0 && boardSize.length < 1){
+        console.log(pixelWidth);
+        pixelWidth = ((width/16)-1.05).toString() + "px"; 
+        //pixelWidth respects up to 2 decimals 
+        removeAll();
+        createContainer(16);
+    } else if (size == 1 && boardSize.length > 0){
+        pixelWidth = ((width/64)-1.01).toString() + "px"; 
+        console.log(pixelWidth);
+        removeAll();
+        createContainer(64);
+    }
+}
+
+function resetBoard() {
+    removeAll();
+    var size = pixelCount.options[pixelCount.selectedIndex].text;
+    size = size.split('px').join("")
+    createContainer(size);
+}
+
+function removeAll() {
     while (container.firstChild) {
         container.removeChild(container.lastChild);
     }
-    if (size == 0){
-        console.log(pixelWidth);
-        pixelWidth = (width/16.5).toString() + "px";
-        createContainer(16);
-    } else if (size == 1){
-        pixelWidth = (width/73).toString() + "px";
-        console.log(pixelWidth);
-        createContainer(64);
-    }
+}
+function windowResize(e) { 
+    // if 
+    console.log(this);
 }
