@@ -20,8 +20,8 @@ document.body.appendChild(container);
 const width = container.clientWidth;
 container.style.height = width+"px";
 var pixelWidth = ((width/16)-1.05).toString() + "px"; // border width accounts for 1 pixel
-console.log(width);
-console.log(pixelWidth);
+// console.log(width);
+// console.log(pixelWidth);
 
 // Buttons Div
 buttonDiv = document.createElement('div');
@@ -34,6 +34,11 @@ color = document.createElement('button');
 color.classList.add('button');
 color.textContent = 'Color Mode';
 buttonDiv.appendChild(color);
+//  Rainbow Button
+rainbow = document.createElement('button');
+rainbow.classList.add('button');
+rainbow.textContent = 'Rainbow Mode';
+buttonDiv.appendChild(rainbow);
 //  Reset Button
 reset = document.createElement('button');
 reset.classList.add('button')
@@ -64,9 +69,17 @@ sizeBtn.classList.add('button');
 sizeBtn.textContent = 'Change pixel size';
 buttonDiv.appendChild(sizeBtn);
 
+// Pixel Slider Div
+sliderDiv = document.createElement('div');
+sliderDiv.classList.add('slider');
+sliderDiv.style.background = '#f4f4f4';
+sliderDiv.style.textAlign = 'center';
+document.body.appendChild(sliderDiv);
+
 // MAIN
 createContainer(16);
 color.addEventListener('click', colorClass);
+rainbow.addEventListener('click', rainbowClass);
 erase.addEventListener('click', eraseClass);
 reset.addEventListener('click', resetBoard);
 sizeBtn.addEventListener('click',pixelChange);
@@ -97,7 +110,11 @@ function createContainer(pix = 16) {
 
 function paintPixel(e) {
     const pixels = document.querySelectorAll('.color');
-    if (pixels.length > 0){
+    const rainbowPix = document.querySelectorAll('.rainbow');
+    if (rainbowPix.length > 0){
+        console.log("rainbows!");
+        if (e.buttons == 1) this.style.background = rainbowSelect();
+    } else if (pixels.length > 0){
         if (e.buttons == 1) this.style.background = 'black';
     } else if (pixels.length == 0){
         if (e.buttons == 1) this.style.background = '#f4f4f4'; 
@@ -108,6 +125,7 @@ function eraseClass() {
     const pixels = document.querySelectorAll('.color');
     pixels.forEach(function(pixel) {
         pixel.classList.remove("color");
+        pixel.classList.remove("rainbow");
         pixel.classList.add("erase");
     });
 }
@@ -116,8 +134,26 @@ function colorClass() {
     const pixels = document.querySelectorAll('.erase');
     pixels.forEach(function(pixel) {
         pixel.classList.remove("erase");
+        pixel.classList.remove("rainbow");
         pixel.classList.add("color");
     });
+}
+
+function rainbowClass() {
+    const pixels = document.querySelectorAll('.pixel');
+    pixels.forEach(function(pixel) {
+        pixel.classList.add("rainbow");
+    });
+}
+
+function rainbowSelect() {
+    var hexArr = [0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E' ,'F'];
+    var hexOutput = "";
+    for (i = 0; i < 6; i++){
+        hexOutput = hexOutput+hexArr[Math.floor(Math.random() * hexArr.length)]
+    }
+    hexOutput = "#" + hexOutput;
+    return hexOutput;
 }
 
 function pixelChange() {
