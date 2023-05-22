@@ -1,34 +1,17 @@
 // HTML
 console.log(document);
 
-// Header
-header = document.createElement('header');
-header.classList.add('header');
-header.textContent = 'Etch-a-Sketch';
-document.body.appendChild(header);
-
-// Container Div 
-container = document.createElement('div');
-container.classList.add('container');
-container.style.background = '#514b45';
-container.style.textAlign = 'center';
-container.style.maxWidth = '75%';
-container.style.maxHeight = '75%';
-container.style.width = '500px';
-container.style.height = 'relative';
-document.body.appendChild(container);
-const width = container.clientWidth;
-container.style.height = width+"px";
-var pixelWidth = ((width/16)-1.05).toString() + "px"; // border width accounts for 1 pixel
-// console.log(width);
-// console.log(pixelWidth);
+// Main Div
+maindiv = document.createElement('div');
+maindiv.classList.add('main');
+document.body.appendChild(maindiv);
 
 // Buttons Div
 buttonDiv = document.createElement('div');
 buttonDiv.classList.add('buttons');
-buttonDiv.style.background = '#f4f4f4';
+buttonDiv.style.background = '#ffffff';
 buttonDiv.style.textAlign = 'center';
-document.body.appendChild(buttonDiv);
+maindiv.appendChild(buttonDiv);
 //  Color Button
 color = document.createElement('button');
 color.classList.add('button');
@@ -39,18 +22,20 @@ rainbow = document.createElement('button');
 rainbow.classList.add('button');
 rainbow.textContent = 'Rainbow Mode';
 buttonDiv.appendChild(rainbow);
-//  Reset Button
-reset = document.createElement('button');
-reset.classList.add('button')
-reset.textContent = 'Reset';
-buttonDiv.appendChild(reset);
 //  Eraser Button
 erase = document.createElement('button');
 erase.classList.add('button');
 erase.textContent = 'Erase';
 buttonDiv.appendChild(erase);
+//  Reset Button
+reset = document.createElement('button');
+reset.classList.add('button')
+reset.textContent = 'Reset';
+buttonDiv.appendChild(reset);
 
 // Pixel Slider Div
+pixelButtons = document.createElement('div');
+pixelButtons.classList.add('pixelDiv');
 pixelCount = document.createElement('select');
 pixelCount.classList.add('options');
 var smallOption = document.createElement("option");
@@ -62,12 +47,13 @@ pixelCount.add(medOption);
 var bigOption = document.createElement("option");
 bigOption.text = "64px";
 pixelCount.add(bigOption);
-buttonDiv.appendChild(pixelCount);
+buttonDiv.appendChild(pixelButtons);
+pixelButtons.appendChild(pixelCount);
 
 sizeBtn = document.createElement('button');
 sizeBtn.classList.add('button');
 sizeBtn.textContent = 'Change pixel size';
-buttonDiv.appendChild(sizeBtn);
+pixelButtons.appendChild(sizeBtn);
 
 // Pixel Slider Div
 sliderDiv = document.createElement('div');
@@ -75,6 +61,26 @@ sliderDiv.classList.add('slider');
 sliderDiv.style.background = '#f4f4f4';
 sliderDiv.style.textAlign = 'center';
 document.body.appendChild(sliderDiv);
+
+// Sketch Div
+sketchDiv = document.createElement('sketchDiv');
+sketchDiv.classList.add('sketch');
+sketchDiv.textContent = 'Etch-a-Sketch';
+maindiv.appendChild(sketchDiv);
+
+// Container Div 
+container = document.createElement('div');
+container.classList.add('container');
+container.style.background = '#514b45';
+container.style.textAlign = 'center';
+container.style.maxWidth = '75%';
+container.style.maxHeight = '75%';
+container.style.width = '500px';
+container.style.height = 'relative';
+sketchDiv.appendChild(container);
+const width = container.clientWidth;
+container.style.height = width+"px";
+var pixelWidth = ((width/16)-1).toString() + "px"; // border width accounts for 1 pixel
 
 // MAIN
 createContainer(16);
@@ -115,39 +121,51 @@ function paintPixel(e) {
         console.log("rainbows!");
         if (e.buttons == 1) this.style.background = rainbowSelect();
     } else if (pixels.length > 0){
-        if (e.buttons == 1) this.style.background = 'black';
+        if (e.buttons == 1) this.style.background = '#bababa';
     } else if (pixels.length == 0){
         if (e.buttons == 1) this.style.background = '#f4f4f4'; 
     }
 }
 
 function eraseClass() {
-    const pixels = document.querySelectorAll('.color');
+    var option = '';
+    if (document.querySelectorAll('.rainbow').length >0) {
+        option = 'rainbow';
+    } else if (document.querySelectorAll('.color').length >0) {
+        option = 'color';
+    }
+    const pixels = document.querySelectorAll('.'+option);
     pixels.forEach(function(pixel) {
-        pixel.classList.remove("color");
-        pixel.classList.remove("rainbow");
+        pixel.classList.remove(option);
         pixel.classList.add("erase");
     });
 }
 
 function colorClass() {
-    const pixels = document.querySelectorAll('.erase');
-    pixels.forEach(function(pixel) {
-        pixel.classList.remove("erase");
-        pixel.classList.remove("rainbow");
-        pixel.classList.add("color");
-    });
+    const switchRainbow = document.querySelectorAll('.rainbow');
+    const switchErase = document.querySelectorAll('.erase');
+    if (switchRainbow.length > 0){
+        switchRainbow.forEach(function(pixel) {
+            pixel.classList.remove("rainbow");
+            pixel.classList.add("color");
+        });
+    } else if (switchErase.length > 0) {
+        switchErase.forEach(function(pixel) {
+            pixel.classList.remove("erase");
+            pixel.classList.add("color");
+        });
+    }
 }
 
 function rainbowClass() {
     const pixels = document.querySelectorAll('.pixel');
-    pixels.forEach(function(pixel) {
+        pixels.forEach(function(pixel) {
         pixel.classList.add("rainbow");
     });
 }
 
 function rainbowSelect() {
-    var hexArr = [0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E' ,'F'];
+    var hexArr = [0,1,2,3,'A','B','C','D','E','F'];
     var hexOutput = "";
     for (i = 0; i < 6; i++){
         hexOutput = hexOutput+hexArr[Math.floor(Math.random() * hexArr.length)]
